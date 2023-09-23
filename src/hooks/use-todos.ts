@@ -1,9 +1,9 @@
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TTodo } from "../types/todo";
-import { useImmer } from "use-immer";
 
 export function useTodoList() {
-  const [todoList, setTodoList] = useImmer<TTodo[]>([]);
+  const [todoList, setTodoList] = useState<TTodo[]>([]);
 
   const addTodo = (name: string) => {
     const newTodo = {
@@ -12,12 +12,14 @@ export function useTodoList() {
       finished: false,
       createdAt: new Date(),
     };
-    todoList.push(newTodo);
-    setTodoList(todoList);
+
+    setTodoList((prevTodoList) => [...prevTodoList, newTodo]);
   };
 
   const deleteTodo = (id: string) => {
-    setTodoList((prev) => prev.filter((todo) => todo.id !== id));
+    setTodoList((prevTodoList) =>
+      prevTodoList.filter((todo) => todo.id !== id)
+    );
   };
 
   const updateTodo = (id: string, name: string) => {
